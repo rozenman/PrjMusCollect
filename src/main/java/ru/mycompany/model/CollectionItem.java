@@ -25,7 +25,15 @@ public class CollectionItem {
         this.File_name = File_name;
     }
     public CollectionItem() {
-
+        id = 0;
+        Title = "";
+        Artists = "";
+        Composer = "";
+        Genre = "";
+        Album = "";
+        Duration = "";
+        File_path = "";
+        File_name = "";
     }
 
     public int getId() {

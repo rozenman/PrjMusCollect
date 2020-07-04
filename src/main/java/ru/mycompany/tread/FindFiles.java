@@ -40,7 +40,7 @@ public class FindFiles extends Thread {
         CollectionItem citem = new CollectionItem();
         // если объект представляет каталог
         Platform.runLater(() -> {
-            MainFX.controller.music_collection.add(new CollectionItem(2, "Title2", "Artists2", "Composer2", "Genre2", "Album2", "222", "--2", "++2"));
+            //MainFX.controller.music_collection.add(new CollectionItem(2, "Title2", "Artists2", "Composer2", "Genre2", "Album2", "222", "--2", "++2"));
         });
         if (dir1.isDirectory()) {
             long path_ID = path_tbl.Get_id(dir1.getAbsolutePath());

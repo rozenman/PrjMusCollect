@@ -53,7 +53,7 @@ public class Decode_audio {
             AudioHeader audioHeader = f.getAudioHeader();
             //System.out.println("###########"+audioHeader);
             int TrackLength = audioHeader.getTrackLength();
-            System.out.println("TrackLength:: "+ TrackLength + ":" + item);
+            //System.out.println("TrackLength:: "+ TrackLength + ":" + item);
             //ID3v24Tag v24tag = (ID3v24Tag) f.getID3v2TagAsv24();
 
 
@@ -69,15 +69,18 @@ public class Decode_audio {
             String composer = tag.getFirst(FieldKey.COMPOSER);
             String artist_sort = tag.getFirst(FieldKey.ARTIST_SORT);
             //String track_total = tag.getFirst(FieldKey.TRACK_TOTAL);
-/*
+            /*
             System.out.println("Duration: "+ TrackLength + ", \nArtist: " + artist + ", \nAlbum: " + album +
                     ", \nTitle: " + title + ", \nGENRE:" + genre +", \nComment: " + comment + ", \nYEAR:" + year + ", \nTrack: " + track +
                     ", \nDOSK_NO: " + disk_no + ", \nCOMPOSER: " + composer + ", \nARTIST_SORT: " + artist_sort);
 
- */
+
+             */
+
             item  = new CollectionItem(-1,title, artist, composer, genre, album, "" + TrackLength, file.getParent(), file.getName() );
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("#5");
         } catch (ReadOnlyFileException e) {
             e.printStackTrace();
             System.out.println("#1");

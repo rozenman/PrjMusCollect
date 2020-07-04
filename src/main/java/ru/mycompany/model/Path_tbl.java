@@ -22,6 +22,8 @@ public class Path_tbl {
     public static final String SQL_DELETE_NAME = SQL_DELETE_ALL + " where " + NAME_COLUMN + " = ?";
     public static final String SQL_DELETE_ID = SQL_DELETE_ALL + " where " + ID_COLUMN + " = ?";
 
+    public static final String SQL_Delete_Table = "drop table if exists " + TABLE_NAME + "";
+
     public void Path_tbl(){
 
     }
@@ -384,12 +386,48 @@ public class Path_tbl {
         return new_ID;
     }
 
+    public void del_table(){
+        Connection connection = ConnectionDB();
+        PreparedStatement selectPreparedStatement = null;
+        try {
+            connection.setAutoCommit(false);
+            selectPreparedStatement = connection.prepareStatement(SQL_Delete_Table);
+            //sselectPreparedStatement.setLong(1,id);
+            selectPreparedStatement.execute();
+            ResultSet rs = selectPreparedStatement.getGeneratedKeys();
+            //if (rs.next()){
+            //    long new_ID = rs.getLong(1);
+            //}
+            connection.commit();
+        }catch (SQLException e) {
+            // Handle errors for JDBC
+            e.printStackTrace();
+            System.out.println("Exception Message " + e.getLocalizedMessage());
+        } finally {
+            try {
+                if(selectPreparedStatement!=null) selectPreparedStatement.close();;
+            } catch(SQLException se2) {
+                System.out.println("# Exception 2");
+
+            } // nothing we can do
+            try {
+                if(connection!=null) connection.close();
+            } catch(SQLException se) {
+                se.printStackTrace();
+                System.out.println("# Exception 1");
+            } // end finally try
+
+        }
+
+    }
 
     public void print_tale(){
         Connection connection = ConnectionDB();
         PreparedStatement selectPreparedStatement = null;
         long new_ID;
         String new_path;
+        System.out.println("---TABLE PATH   ---");
+
         try {
             connection.setAutoCommit(false);
             selectPreparedStatement = connection.prepareStatement(SQL_FIND_ALL);
@@ -418,6 +456,7 @@ public class Path_tbl {
             } // end finally try
 
         }
+        System.out.println("----------------------");
 
     }
 }

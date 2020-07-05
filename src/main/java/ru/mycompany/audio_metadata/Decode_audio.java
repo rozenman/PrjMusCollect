@@ -34,7 +34,18 @@ public class Decode_audio {
     }
 
     public static CollectionItem decode_info(String fname) {
-        CollectionItem item  = new CollectionItem();
+        File file = new File(fname);
+        CollectionItem item  = new CollectionItem(
+                -1,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "0",
+                file.getParent(),
+                file.getName()
+        );
         //item.setDuration("0");
         //Disable loggers
         Logger[] pin = new Logger[]{ Logger.getLogger("org.jaudiotagger") };
@@ -42,18 +53,14 @@ public class Decode_audio {
         for (Logger l : pin)
             l.setLevel(Level.OFF);
         try {
-            File file = new File(fname);
+
             //FlacFileReader
 
-            //MP3File f = new MP3File(file);
-            //System.out.println("@@@@@@@@@@@"+file);
             AudioFile f = AudioFileIO.read(file);
-            //System.out.println("@@@@@@@@@@@"+f);
             Tag tag = f.getTag();
             AudioHeader audioHeader = f.getAudioHeader();
-            //System.out.println("###########"+audioHeader);
             int TrackLength = audioHeader.getTrackLength();
-            //System.out.println("TrackLength:: "+ TrackLength + ":" + item);
+            item.setDuration("" + TrackLength);
             //ID3v24Tag v24tag = (ID3v24Tag) f.getID3v2TagAsv24();
 
 
@@ -77,22 +84,32 @@ public class Decode_audio {
 
              */
 
-            item  = new CollectionItem(-1,title, artist, composer, genre, album, "" + TrackLength, file.getParent(), file.getName() );
+            item  = new CollectionItem(
+                    -1,
+                    title,
+                    artist,
+                    composer,
+                    genre,
+                    album,
+                    "" + TrackLength,
+                    file.getParent(),
+                    file.getName()
+            );
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("#5");
+            System.out.println("#5 error " + e);
         } catch (ReadOnlyFileException e) {
             e.printStackTrace();
-            System.out.println("#1");
+            System.out.println("#1 error " + e);
         } catch (TagException e) {
             e.printStackTrace();
-            System.out.println("#2");
+            System.out.println("#2 error " + e);
         } catch (InvalidAudioFrameException e) {
             //e.printStackTrace();
-            System.out.println("#3"+ e);
+            System.out.println("#3 error " + e);
         } catch (CannotReadException e) {
             e.printStackTrace();
-            System.out.println("#4");
+            System.out.println("#4 error " + e);
         }
         return item;
     }

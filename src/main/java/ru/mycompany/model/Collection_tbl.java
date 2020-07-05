@@ -81,7 +81,7 @@ public class Collection_tbl {
                     DB_PASSWORD);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("# " + e.getMessage());
+            System.out.println("# error " + e.getMessage());
         }
         return connection;
     }

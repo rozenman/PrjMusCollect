@@ -131,7 +131,17 @@ public class CollectionItem {
                         "DURATION:" + Duration + "\n" +
                         "FILEPATH:" + File_path + "\n" +
                         "FILENAME:" + File_name + "\n" +
-                        "***"
+                        "***\n"
         );
+    }
+
+    public boolean filter_passed(String sFilter){
+        return (getTitle().contains(sFilter) |
+                getArtists().contains(sFilter) |
+                getCompose().contains(sFilter) |
+                getGenre().contains(sFilter) |
+                getAlbum().contains(sFilter) |
+                getFile_path().contains(sFilter) |
+                getFile_name().contains(sFilter));
     }
 }

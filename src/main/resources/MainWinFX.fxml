@@ -5,47 +5,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.mycompany.Controller">
-   <top>
-      <HBox prefHeight="49.0" prefWidth="1600.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="ClearTablesDB" mnemonicParsing="false" onAction="#ClearTablesDB_on_Action" text="ClearTablesDB">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="Refresh" mnemonicParsing="false" onAction="#Refresh_on_Action" prefHeight="26.0" prefWidth="74.0" text="Refresh">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="Open" mnemonicParsing="false" onAction="#Open_on_Action" text="Open...">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Button>
-            <Label fx:id="path_lbl" text="Путь:">
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Label>
-            <Label fx:id="Dir_lbl" prefHeight="20.0" prefWidth="528.0" text="~">
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Label>
-         </children></HBox>
-   </top>
    <center>
       <TableView fx:id="Collect_Mus_tblw" onMouseClicked="#Collect_Mus_tblw_onMClicked" prefHeight="686.0" prefWidth="960.0" BorderPane.alignment="CENTER">
          <columns>
@@ -64,4 +30,105 @@
          </columnResizePolicy>
       </TableView>
    </center>
+   <bottom>
+      <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Files:">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin></Label>
+            <Label fx:id="Line_cnt_lbl" text="??">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin></Label>
+            <Label text="Filter Iems: ">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Label>
+            <Label fx:id="Line_filter_cnt_lbl" text="??">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Label>
+            <Label text="Folders:">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Label>
+            <Label fx:id="Folders_cnt_lbl" text="??" />
+         </children>
+      </HBox>
+   </bottom>
+   <top>
+      <VBox prefHeight="112.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox prefHeight="52.0" prefWidth="1000.0">
+               <children>
+                  <Button fx:id="ClearTablesDB" mnemonicParsing="false" onAction="#ClearTablesDB_on_Action" text="ClearTablesDB">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="ShowTABinLOG" mnemonicParsing="false" onAction="#ShowTABinLOG_on_Action" prefHeight="26.0" prefWidth="142.0" text="ShowTABinLOG">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="Open" mnemonicParsing="false" onAction="#Open_on_Action" text="Open...">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Label fx:id="path_lbl" text="Путь:">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="Dir_lbl" prefHeight="20.0" prefWidth="498.0" text="~">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Button fx:id="Stop_btn" mnemonicParsing="false" onAction="#Stop_btn_onAction" text="Stop">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox prefHeight="55.0" prefWidth="1000.0">
+               <children>
+                  <Label text="Filter: ">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="Filtr_text_tf" onAction="#Filtr_text_tf_onAction" onInputMethodTextChanged="#Filtr_text_tf_onTextChanged" prefHeight="32.0" prefWidth="486.0">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Button fx:id="Filtr_Apply" mnemonicParsing="false" onAction="#Filtr_Apply_onAction" text="Apply">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
 </BorderPane>

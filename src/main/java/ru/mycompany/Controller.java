@@ -7,11 +7,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.DirectoryChooser;
 import org.h2.tools.DeleteDbFiles;
@@ -26,10 +24,16 @@ import java.io.IOException;
 
 public class Controller {
     //public Controller controller;
+    public static byte DEBUG_LEVEL=2;
 
     private Path_tbl path_tbl;
     private Collection_tbl collection_tbl;
     private ObservableList<CollectionItem> music_collection = FXCollections.observableArrayList();
+    private ObservableList<CollectionItem> music_collection_flt = FXCollections.observableArrayList();
+    private int FoldersCNT;
+
+    private boolean StopThread;
+    private Thread reloadThread;
 
     //private Decode_audio decode_audio;
 
@@ -37,10 +41,13 @@ public class Controller {
     private Button ClearTablesDB;
 
     @FXML
-    private Button Refresh;
+    private Button ShowTABinLOG;
 
     @FXML
     private Button Open;
+
+    @FXML
+    private Button Stop_btn;
 
     @FXML
     public Label path_lbl;
@@ -79,8 +86,25 @@ public class Controller {
     private TableColumn<CollectionItem, String> File_tcol;
 
     @FXML
+    private Label Line_cnt_lbl;
+
+    @FXML
+    private Label Line_filter_cnt_lbl;
+
+    @FXML
+    private Label Folders_cnt_lbl;
+
+    @FXML
+    private TextField Filtr_text_tf;
+
+    @FXML
+    private Button Filtr_Apply;
+
+    @FXML
     void ClearTablesDB_on_Action(ActionEvent event) {
-        System.out.println("ClearTablesDB_onAction");
+        if (DEBUG_LEVEL>0) {
+            System.out.println("ClearTablesDB_onAction");
+        }
 
         // delete the H2 database named 'test' in the user home directory
         //DeleteDbFiles.execute("~", "test", true);
@@ -93,7 +117,9 @@ public class Controller {
 
     @FXML
     void Collect_Mus_tblw_onMClicked(MouseEvent event) throws IOException {
-        System.out.println("TableView_onClicked");
+        if (DEBUG_LEVEL>0) {
+            System.out.println("TableView_onClicked");
+        }
         int click_cnt = event.getClickCount();
         //System.out.println("Click count: " + event.getClickCount());
         //System.out.println("GetTarget: " + event.getTarget());
@@ -102,7 +128,9 @@ public class Controller {
             CollectionItem item = music_collection.get(f_index);
             //item.print();
             String cur_path = item.getFile_path();
-            System.out.println("PATH: "+ cur_path);
+            if (DEBUG_LEVEL>1) {
+                System.out.println("PATH: " + cur_path);
+            }
             Process process = new ProcessBuilder("thunar",cur_path).start();
         }
         //System.out.println("GetIndex: " + Collect_Mus_tblw.getSelectionModel().getFocusedIndex());
@@ -111,7 +139,9 @@ public class Controller {
 
     @FXML
     void Open_on_Action(ActionEvent event) {
-        System.out.println("Open_onAction");
+        if (DEBUG_LEVEL>0) {
+            System.out.println("Open_onAction");
+        }
         //Stage primaryStage = Main.getPrimaryStage();
 
         final DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -124,32 +154,51 @@ public class Controller {
             bDir =dir.getAbsolutePath();
             //new FindFilesInfo("FindFilesInfo", Path_lbl.getText()).start();
         } else {
-            bDir = "/home";
+            return;
+            //bDir = "/home";
         }
 
         Dir_lbl.setText(bDir);
+        MainFX.prop.setProperty("dir_path", bDir);
 
         path_tbl.create_tbl();
-
         collection_tbl.create_tbl();
 
-        Open.setDisable(true);
-        Platform.runLater(() -> {
-            music_collection.clear();
-        });
-        final Thread reloadThread =
+        show_tableview(bDir);
+
+    }
+
+    public void show_tableview(String bDir){
+        if (bDir=="") return;
+        reloadThread =
                 new Thread(
                         () -> {
                             try {
+                                FoldersCNT = 0;
+                                Platform.runLater(() -> {
+                                    Open.setDisable(true);
+                                    ClearTablesDB.setDisable(true);
+                                    ShowTABinLOG.setDisable(true);
+                                    Stop_btn.setDisable(false);
+                                    Line_filter_cnt_lbl.setText("");
+                                    music_collection.clear();
+                                    music_collection_flt.clear();
+                                });
                                 find_all_files(bDir);
                                 //path_tbl.print_tale();
                                 //collection_tbl.print_tale();
-                                } catch (final Exception e) {
-                                System.out.println("error: "+e);
-                                } finally {
+                            } catch (final Exception e) {
+                                System.out.println("in thread error: "+e);
+                            } finally {
                                 Platform.runLater(() -> {
+                                    getFilterCollection("");
+                                    ShowTABinLOG.setDisable(false);
+                                    ClearTablesDB.setDisable(false);
                                     Open.setDisable(false);
+                                    Stop_btn.setDisable(true);
                                 });
+                                StopThread = false;
+
                             }
 
 
@@ -157,9 +206,7 @@ public class Controller {
                         });
         reloadThread.setDaemon(true);
         reloadThread.start();
-
     }
-
     private void configuringDirectoryChooser(DirectoryChooser directoryChooser) {
         // Set title for DirectoryChooser
         directoryChooser.setTitle("Select Some Directories");
@@ -169,12 +216,12 @@ public class Controller {
     }
 
     @FXML
-    void Refresh_on_Action(ActionEvent event) {
-        System.out.println("Refresh_onAction");
+    void ShowTABinLOG_on_Action(ActionEvent event) {
+        if (DEBUG_LEVEL>0) {
+            System.out.println("ShowTABinLOG_onAction");
+        }
 
-        path_tbl.create_tbl();
 
-        collection_tbl.create_tbl();
 
         String bDir = Dir_lbl.getText();
         //find_all_files(bDir);
@@ -182,10 +229,35 @@ public class Controller {
         collection_tbl.print_tale();
     }
 
+    @FXML
+    void Stop_btn_onAction(ActionEvent event) {
+        StopThread = true;
+    }
+
+    @FXML
+    void Filtr_Apply_onAction(ActionEvent event) {
+        System.out.println("Filtr_Apply_onAction ()" );
+        getFilterCollection(Filtr_text_tf.getText());
+    }
+
+    @FXML
+    void Filtr_text_tf_onAction(ActionEvent event) {
+        System.out.println("Filtr_text_tf_onAction ()" );
+        getFilterCollection(Filtr_text_tf.getText());
+    }
+
+    @FXML
+    void Filtr_text_tf_onTextChanged(InputMethodEvent event) {
+        System.out.println("Filtr_text_tf_onTextChanged ()" );
+
+    }
+
     // инициализируем форму данными
     @FXML
     private void initialize(){
-        System.out.println("Метод Controller.initialize()");
+        if (DEBUG_LEVEL>0) {
+            System.out.println("Метод Controller.initialize()");
+        }
 
         // устанавливаем тип и значение которое должно хранится в колонке
 
@@ -200,11 +272,26 @@ public class Controller {
         File_tcol.setCellValueFactory(new PropertyValueFactory<CollectionItem, String>("File_name"));
 
         // заполняем таблицу данными
-        Collect_Mus_tblw.setItems(music_collection);
+        Collect_Mus_tblw.setItems(music_collection_flt);
 
         path_tbl = new Path_tbl();
         collection_tbl = new Collection_tbl();
 
+        //path_tbl.del_table();
+        //collection_tbl.del_table();
+
+        path_tbl.create_tbl();
+        collection_tbl.create_tbl();
+
+        String dp = MainFX.prop.getProperty("dir_path");
+        //System.out.println("dir_path:" + dp);
+
+        Dir_lbl.setText(dp);
+
+        show_tableview(dp);
+
+        Line_filter_cnt_lbl.setText("");
+        Stop_btn.setDisable(true);
     }
 
     public void find_all_files(String bDir) {
@@ -222,16 +309,38 @@ public class Controller {
                     ObservableList<CollectionItem> Citem0;
 
                     Citem0 = collection_tbl.Get_items(path_ID_i);
+                    //music_collection.addAll(Citem0);
+
                     for (CollectionItem item : Citem0) {
+                        if (StopThread){
+                            if(DEBUG_LEVEL>1){
+                                System.out.println("StopThread = 1 EXIT");
+                            }
+                            return;
+                        }
                         item.setId(music_collection.size());
                         item.setFile_path(dir1.getAbsolutePath());
-                        music_collection.add(item);
+                        TableView_addLine(item);
+                        //music_collection.add(item);
+
                     }
+
+
                 });
 
                     for (File f_item : dir1.listFiles()) {
 
                     if (f_item.isDirectory()) {
+                        FoldersCNT++;
+                        if (StopThread){
+                            if(DEBUG_LEVEL>1){
+                                System.out.println("StopThread = 1 EXIT");
+                            }
+                            return;
+                        }
+                        Platform.runLater(() -> {
+                                    Folders_cnt_lbl.setText("[" + FoldersCNT + "]");
+                                });
                         find_all_files(f_item.getAbsolutePath());
                     }
                     }
@@ -239,25 +348,43 @@ public class Controller {
             }
             else {
                 // Путь в базе отсутствует, добавляем его
+                if (StopThread){
+                    if(DEBUG_LEVEL>1){
+                        System.out.println("StopThread = 1 EXIT");
+                    }
+                    return;
+                }
                 path_ID = path_tbl.Add(dir1.getAbsolutePath());
                 //long collect_ID;
                 // получаем все вложенные объекты в каталоге
                 for (File f_item : dir1.listFiles()) {
 
-                    if (f_item.isDirectory()) {
 
-                        //System.out.println(f_item.getName() + "  \t folder");
-                        //System.out.println(item.getAbsolutePath() + "  \t folder");
+                    if (f_item.isDirectory()) {
+                        FoldersCNT++;
+                        Platform.runLater(() -> {
+                            Folders_cnt_lbl.setText("["+FoldersCNT+"]");
+
+                        });
+                        if (DEBUG_LEVEL>1) {
+                            System.out.println(f_item.getName() + "  \t folder");
+                            //System.out.println(item.getAbsolutePath() + "  \t folder");
+                        }
                         find_all_files(f_item.getAbsolutePath());
 
                     } else {
                         // это файл
-                        if (f_item.getName().endsWith(".mp3") || f_item.getName().endsWith(".flac")) {
 
-                            //System.out.println(f_item.getName() + "\t file");
+                        if (f_item.getName().endsWith(".mp3") || f_item.getName().endsWith(".flac")) {
+                            if (DEBUG_LEVEL>1) {
+                                System.out.println(f_item.getName() + "\t file");
+                            }
 
                             String s = f_item.getAbsolutePath();
                             citem = cb_decode_file(f_item);
+                            if (DEBUG_LEVEL>1) {
+                                citem.print();
+                            }
 
 
                             if (citem.getFile_name()!="") {
@@ -268,7 +395,8 @@ public class Controller {
                                 Platform.runLater(() -> {
 
                                     finalCitem.setId(music_collection.size());
-                                    music_collection.add(finalCitem);
+                                    TableView_addLine(finalCitem);
+                                    //music_collection.add(finalCitem);
 
                                     });
                             }
@@ -289,7 +417,36 @@ public class Controller {
     }
 
     public Controller() {
-        System.out.println("Constructor Controller()");
+        if (DEBUG_LEVEL>0) {
+            System.out.println("Constructor Controller()");
+        }
+
+    }
+
+    public int TableView_addLine(CollectionItem item){
+        music_collection.add(item);
+        int size = music_collection.size();
+        Line_cnt_lbl.setText("[" + size + "]");
+        music_collection_flt.add(item);
+        size = music_collection_flt.size();
+        Line_filter_cnt_lbl.setText("["+size+"]");
+        return size;
+    }
+
+    public String getcurPath(){
+        return Dir_lbl.getText();
+    }
+
+    public void getFilterCollection(
+            String filterString){
+        music_collection_flt.clear();
+        for (CollectionItem item : music_collection) {
+            if (item.filter_passed(filterString)){
+                music_collection_flt.add(item);
+            }
+        }
+        int size = music_collection_flt.size();
+        Line_filter_cnt_lbl.setText("["+size+"]");
 
     }
 }

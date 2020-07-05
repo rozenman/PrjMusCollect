@@ -75,6 +75,11 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
+                  <Button fx:id="Rescan_btn" mnemonicParsing="false" onAction="#Rescan_btn_onAction" text="Rescan">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
                   <Button fx:id="Open" mnemonicParsing="false" onAction="#Open_on_Action" text="Open...">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -88,7 +93,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <Label fx:id="Dir_lbl" prefHeight="20.0" prefWidth="498.0" text="~">
+                  <Label fx:id="Dir_lbl" prefHeight="20.0" prefWidth="433.0" text="~">
                      <font>
                         <Font size="16.0" />
                      </font>

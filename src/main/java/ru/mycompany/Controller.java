@@ -24,7 +24,7 @@ import java.io.IOException;
 
 public class Controller {
     //public Controller controller;
-    public static byte DEBUG_LEVEL=2;
+    public static byte DEBUG_LEVEL=0;
 
     private Path_tbl path_tbl;
     private Collection_tbl collection_tbl;
@@ -42,6 +42,9 @@ public class Controller {
 
     @FXML
     private Button ShowTABinLOG;
+
+    @FXML
+    private Button Rescan_btn;
 
     @FXML
     private Button Open;
@@ -138,6 +141,14 @@ public class Controller {
     }
 
     @FXML
+    void Rescan_btn_onAction(ActionEvent event) {
+        String bDir = Dir_lbl.getText();
+        path_tbl.del_path(bDir);
+        //path_tbl.print_tale();
+        show_tableview(bDir);
+    }
+
+    @FXML
     void Open_on_Action(ActionEvent event) {
         if (DEBUG_LEVEL>0) {
             System.out.println("Open_onAction");
@@ -177,6 +188,7 @@ public class Controller {
                                 FoldersCNT = 0;
                                 Platform.runLater(() -> {
                                     Open.setDisable(true);
+                                    Rescan_btn.setDisable(true);
                                     ClearTablesDB.setDisable(true);
                                     ShowTABinLOG.setDisable(true);
                                     Stop_btn.setDisable(false);
@@ -194,6 +206,7 @@ public class Controller {
                                     getFilterCollection("");
                                     ShowTABinLOG.setDisable(false);
                                     ClearTablesDB.setDisable(false);
+                                    Rescan_btn.setDisable(false);
                                     Open.setDisable(false);
                                     Stop_btn.setDisable(true);
                                 });

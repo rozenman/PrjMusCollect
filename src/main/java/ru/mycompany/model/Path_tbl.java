@@ -19,7 +19,7 @@ public class Path_tbl {
     public static final String SQL_UPDATE = "update " + TABLE_NAME + " set " + NAME_COLUMN  + " = ? where " + NAME_COLUMN + " = ?";
     public static final String SQL_UPDATE_ID = "update " + TABLE_NAME + " set " + NAME_COLUMN + " = ? where " + ID_COLUMN + " = ?";
     public static final String SQL_DELETE_ALL = "delete from " + TABLE_NAME;
-    public static final String SQL_DELETE_NAME = SQL_DELETE_ALL + " where " + NAME_COLUMN + " = ?";
+    public static final String SQL_DELETE_NAME = SQL_DELETE_ALL + " where " + NAME_COLUMN + " >= ?";
     public static final String SQL_DELETE_ID = SQL_DELETE_ALL + " where " + ID_COLUMN + " = ?";
 
     public static final String SQL_Delete_Table = "drop table if exists " + TABLE_NAME + "";

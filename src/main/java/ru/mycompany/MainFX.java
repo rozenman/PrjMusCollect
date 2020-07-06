@@ -73,7 +73,7 @@ public class MainFX extends Application {
             FileInputStream fi = new FileInputStream(System.getProperty("user.dir")+"/config.properties");
             prop.load(fi);
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println("ERROR "+ e);
             prop.setProperty("dir_path", "");
         }

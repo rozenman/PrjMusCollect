@@ -170,6 +170,7 @@ public class Controller {
         }
 
         Dir_lbl.setText(bDir);
+
         MainFX.prop.setProperty("dir_path", bDir);
 
         path_tbl.create_tbl();
@@ -178,7 +179,14 @@ public class Controller {
         show_tableview(bDir);
 
     }
+    private void DisableButtons(boolean fDisable){
+        Open.setDisable(fDisable);
+        Rescan_btn.setDisable(fDisable);
+        ClearTablesDB.setDisable(fDisable);
+        ShowTABinLOG.setDisable(fDisable);
+        Stop_btn.setDisable(!fDisable);
 
+    }
     public void show_tableview(String bDir){
         if (bDir=="") return;
         reloadThread =
@@ -187,11 +195,7 @@ public class Controller {
                             try {
                                 FoldersCNT = 0;
                                 Platform.runLater(() -> {
-                                    Open.setDisable(true);
-                                    Rescan_btn.setDisable(true);
-                                    ClearTablesDB.setDisable(true);
-                                    ShowTABinLOG.setDisable(true);
-                                    Stop_btn.setDisable(false);
+                                    DisableButtons(true);
                                     Line_filter_cnt_lbl.setText("");
                                     music_collection.clear();
                                     music_collection_flt.clear();
@@ -204,11 +208,7 @@ public class Controller {
                             } finally {
                                 Platform.runLater(() -> {
                                     getFilterCollection("");
-                                    ShowTABinLOG.setDisable(false);
-                                    ClearTablesDB.setDisable(false);
-                                    Rescan_btn.setDisable(false);
-                                    Open.setDisable(false);
-                                    Stop_btn.setDisable(true);
+                                    DisableButtons(false);
                                 });
                                 StopThread = false;
 
@@ -244,6 +244,7 @@ public class Controller {
 
     @FXML
     void Stop_btn_onAction(ActionEvent event) {
+
         StopThread = true;
     }
 
@@ -304,7 +305,8 @@ public class Controller {
         show_tableview(dp);
 
         Line_filter_cnt_lbl.setText("");
-        Stop_btn.setDisable(true);
+
+        DisableButtons(false);
     }
 
     public void find_all_files(String bDir) {
@@ -333,6 +335,7 @@ public class Controller {
                         }
                         item.setId(music_collection.size());
                         item.setFile_path(dir1.getAbsolutePath());
+
                         TableView_addLine(item);
                         //music_collection.add(item);
 
@@ -438,11 +441,15 @@ public class Controller {
 
     public int TableView_addLine(CollectionItem item){
         music_collection.add(item);
+        music_collection_flt.add(item);
+
         int size = music_collection.size();
         Line_cnt_lbl.setText("[" + size + "]");
-        music_collection_flt.add(item);
-        size = music_collection_flt.size();
-        Line_filter_cnt_lbl.setText("["+size+"]");
+
+
+        int size_f = music_collection_flt.size();
+        Line_filter_cnt_lbl.setText("["+size_f+"]");
+
         return size;
     }
 
@@ -450,8 +457,7 @@ public class Controller {
         return Dir_lbl.getText();
     }
 
-    public void getFilterCollection(
-            String filterString){
+    public void getFilterCollection(String filterString){
         music_collection_flt.clear();
         for (CollectionItem item : music_collection) {
             if (item.filter_passed(filterString)){

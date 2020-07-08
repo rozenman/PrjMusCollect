@@ -87,7 +87,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>MainFrame</mainClass>
+                            <mainClass>ru.mycompany.MainFX</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

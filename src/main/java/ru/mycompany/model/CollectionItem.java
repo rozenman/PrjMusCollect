@@ -44,9 +44,6 @@ public class CollectionItem {
     }
 
     public String getTitle() {
-        if (Title==null){
-            Title = "";
-        }
         return Title;
     }
     public void setTitle(String title) {
@@ -54,9 +51,7 @@ public class CollectionItem {
     }
 
     public String getArtists() {
-        if (Artists==null) {
-            Artists = "";
-        }
+
         return Artists;
     }
     public void setArtists(String artists) {
@@ -64,9 +59,6 @@ public class CollectionItem {
     }
 
     public String getCompose() {
-        if (Composer==null){
-            Composer="";
-        }
         return Composer;
     }
     public void setCompose(String composer) {
@@ -74,9 +66,7 @@ public class CollectionItem {
     }
 
     public String getGenre() {
-        if (Genre==null){
-            Genre="";
-        }
+
         return Genre;
     }
     public void setGenre(String genye) {
@@ -84,9 +74,7 @@ public class CollectionItem {
     }
 
     public String getAlbum() {
-        if (Album==null){
-            Album="";
-        }
+
         return Album;
     }
     public void setAlbum(String album) {
@@ -94,9 +82,7 @@ public class CollectionItem {
     }
 
     public String getDuration() {
-        if (Duration==null) {
-            Duration = "0";
-        }
+
         return Duration;
     }
     public void setDuration(String duration) {
@@ -111,9 +97,7 @@ public class CollectionItem {
     }
 
     public String getFile_name() {
-        if (File_name==null){
-            File_name="";
-        }
+
         return File_name;
     }
     public void setFile_name(String file_name) {
@@ -136,12 +120,12 @@ public class CollectionItem {
     }
 
     public boolean filter_passed(String sFilter){
-        return (getTitle().contains(sFilter) |
-                getArtists().contains(sFilter) |
-                getCompose().contains(sFilter) |
-                getGenre().contains(sFilter) |
-                getAlbum().contains(sFilter) |
-                getFile_path().contains(sFilter) |
+        return (getTitle().contains(sFilter) ||
+                getArtists().contains(sFilter) ||
+                getCompose().contains(sFilter) ||
+                getGenre().contains(sFilter) ||
+                getAlbum().contains(sFilter) ||
+                getFile_path().contains(sFilter) ||
                 getFile_name().contains(sFilter));
     }
 }

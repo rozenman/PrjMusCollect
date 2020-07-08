@@ -17,7 +17,7 @@ import ru.mycompany.audio_metadata.Decode_audio;
 import ru.mycompany.model.CollectionItem;
 import ru.mycompany.model.Collection_tbl;
 import ru.mycompany.model.Path_tbl;
-import ru.mycompany.tread.FindFiles;
+//import ru.mycompany.tread.FindFiles;
 
 import java.io.File;
 import java.io.IOException;
@@ -188,7 +188,7 @@ public class Controller {
 
     }
     public void show_tableview(String bDir){
-        if (bDir=="") return;
+        if (bDir.isEmpty()) return;
         reloadThread =
                 new Thread(
                         () -> {
@@ -355,7 +355,7 @@ public class Controller {
                             return;
                         }
                         Platform.runLater(() -> {
-                                    Folders_cnt_lbl.setText("[" + FoldersCNT + "]");
+                                    Folders_cnt_lbl.setText(String.format("[%04d]", FoldersCNT));
                                 });
                         find_all_files(f_item.getAbsolutePath());
                     }
@@ -379,7 +379,8 @@ public class Controller {
                     if (f_item.isDirectory()) {
                         FoldersCNT++;
                         Platform.runLater(() -> {
-                            Folders_cnt_lbl.setText("["+FoldersCNT+"]");
+                            //Folders_cnt_lbl.setText("["+FoldersCNT+"]");
+                            Folders_cnt_lbl.setText(String.format("[$04d]",FoldersCNT));
 
                         });
                         if (DEBUG_LEVEL>1) {
@@ -403,7 +404,7 @@ public class Controller {
                             }
 
 
-                            if (citem.getFile_name()!="") {
+                            if (citem.getFile_name().isEmpty()) {
                                 int duration = Integer.parseInt (citem.getDuration());
                                 long id = collection_tbl.Add(citem.getTitle(), citem.getArtists(), citem.getCompose(), citem.getGenre(), citem.getAlbum(), duration, (int) path_ID, citem.getFile_name());
 
@@ -444,11 +445,14 @@ public class Controller {
         music_collection_flt.add(item);
 
         int size = music_collection.size();
-        Line_cnt_lbl.setText("[" + size + "]");
+        //Line_cnt_lbl.setText("[" + size + "]");
+        Line_cnt_lbl.setText(String.format("[%04d]",size));
 
 
         int size_f = music_collection_flt.size();
-        Line_filter_cnt_lbl.setText("["+size_f+"]");
+        //Line_filter_cnt_lbl.setText("["+size_f+"]");
+        Line_filter_cnt_lbl.setText(String.format("[%04d]", size_f));
+
 
         return size;
     }
@@ -465,7 +469,8 @@ public class Controller {
             }
         }
         int size = music_collection_flt.size();
-        Line_filter_cnt_lbl.setText("["+size+"]");
+        //Line_filter_cnt_lbl.setText("["+size+"]");
+        Line_filter_cnt_lbl.setText(String.format("[%04d]",size));
 
     }
 }
